@@ -1,69 +1,144 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  Sparkles,
+  BookOpen,
+  Users,
+  Brain,
+  GitBranch,
+  FileText,
+  ShieldCheck,
+  ArrowRight,
+  Zap,
+  Network,
+  Compass,
+  FlaskConical,
+  Code2,
+  Clapperboard,
+  Briefcase,
+} from "lucide-react";
+
+export default function LandingPage() {
+  const domains = [
+    { title: "Novel & Sastra", desc: "Editor bab kolaboratif, grafik hubungan karakter, dan memori cerita.", icon: BookOpen, status: "TERSEDIA" },
+    { title: "Riset Akademik", desc: "Sintesis literatur, pembuatan makalah kolaboratif, dan pemetaan sitasi.", icon: FlaskConical, status: "COMING SOON" },
+    { title: "Skenario & Film", desc: "Editor format naskah standar, pemetaan adegan, dan inteligensi karakter.", icon: Clapperboard, status: "COMING SOON" },
+    { title: "Rekayasa Kode", desc: "Dokumentasi spesifikasi sistem, lacak atribusi ide, dan memori kode.", icon: Code2, status: "COMING SOON" },
+    { title: "Bisnis & Strategi", desc: "Narasi pitch deck kolaboratif, whitepaper, dan skor kontribusi tim.", icon: Briefcase, status: "COMING SOON" },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-purple-500 selection:text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-extrabold shadow-md shadow-purple-200">
+              B
+            </div>
+            <span className="font-black text-xl tracking-tight text-slate-900">
+              Breemous
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/login"
+              className="text-sm font-bold text-slate-600 hover:text-purple-700 transition-colors px-4 py-2"
+            >
+              Masuk
+            </Link>
+            <Link
+              href="/register"
+              className="text-sm font-bold bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl shadow-md shadow-purple-200 transition-all flex items-center gap-2"
+            >
+              Daftar Gratis <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-36 pb-20 px-6 max-w-7xl mx-auto text-center canva-banner-bg border-b border-slate-200">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100 border border-purple-200 text-purple-700 text-xs font-bold uppercase tracking-wider mb-8">
+            <Sparkles className="w-3.5 h-3.5" /> AI-Native Collaborative Creation Platform
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight max-w-5xl mx-auto leading-tight">
+            Create Together.{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600">
+              Understand Every Contribution.
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+          <p className="mt-6 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
+            Sistem operasi kolaboratif multi-bidang berbasis AI. Buat novel, riset akademik, skenario film, spesifikasi kode, dan dokumen bisnis bersama tim dengan inteligensi kontribusi transparan.
+          </p>
+
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/register"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold shadow-lg shadow-purple-200 transition-all flex items-center justify-center gap-3 text-base"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Mulai Buat Karya <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/domains"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white text-slate-800 hover:text-purple-700 font-bold border border-slate-200 shadow-sm transition-all flex items-center justify-center gap-3 text-base"
             >
-              Learning
-            </a>{" "}
-            center.
+              <Compass className="w-5 h-5 text-purple-600" /> Jelajahi Workspace Domain
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Multi-Domain Creative Fields Section */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-widest text-purple-700">Dukungan Multi-Bidang</span>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 mt-2">
+            Satu Platform Untuk Berbagai Bidang Karya
+          </h2>
+          <p className="mt-3 text-slate-600 max-w-2xl mx-auto text-sm font-medium">
+            Pilih domain karya Anda. Setiap bidang dilengkapi dengan memori AI, pelacakan kontribusi, dan grafik hubungan khusus.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {domains.map((d, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ y: -6 }}
+              className="canva-card p-6 rounded-2xl flex flex-col justify-between"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center mb-4">
+                  <d.icon className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-slate-900 text-base mb-2">{d.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-4">{d.desc}</p>
+              </div>
+              <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full w-fit ${
+                d.status === "TERSEDIA" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"
+              }`}>
+                {d.status}
+              </span>
+            </motion.div>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 py-8 text-center text-xs text-slate-500 font-medium bg-white">
+        <p>© 2026 Breemous — AI-Native Collaborative Creation SaaS Platform.</p>
+      </footer>
     </div>
   );
 }
