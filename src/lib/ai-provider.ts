@@ -24,6 +24,24 @@ export interface IdeaDetectionResult {
   snippet?: string;
 }
 
+export interface StoryImpactPayload {
+  changeDescription: string;
+  affectedCharacter?: string;
+  chapters: { id: string; title: string; orderIndex: number; content: string }[];
+  characters: { id: string; name: string; role: string }[];
+  events: { id: string; title: string }[];
+}
+
+export interface StoryImpactResult {
+  impactLevel: "HIGH" | "MEDIUM" | "LOW";
+  summary: string;
+  impactedCharacterRelationships: string[];
+  impactedChapters: string[];
+  impactedPlotPoints: string[];
+  impactedArcs: string[];
+  recommendations: string[];
+}
+
 export interface AIProvider {
   name: string;
   answerStoryQuestion(payload: StoryQuestionPayload): Promise<string>;
@@ -34,7 +52,9 @@ export interface AIProvider {
     narrativeImpactSummary: string;
     downstreamInfluence: string;
   }>;
+  analyzeStoryImpact(payload: StoryImpactPayload): Promise<StoryImpactResult>;
 }
+
 
 class MockLocalAIProvider implements AIProvider {
   name = "StoryBrain Local Engine (Mock / Fallback)";
@@ -111,7 +131,69 @@ class MockLocalAIProvider implements AIProvider {
       downstreamInfluence: "High - Influences 7 subsequent scenes across Chapters 15-20.",
     };
   }
+
+  async analyzeStoryImpact(payload: StoryImpactPayload): Promise<StoryImpactResult> {
+    const { changeDescription, chapters, characters } = payload;
+    const desc = changeDescription.toLowerCase();
+
+    const isVillainChange = desc.includes("villain") || desc.includes("antagonis") || desc.includes("musuh");
+    const isProtagonistChange = desc.includes("protagonist") || desc.includes("hero") || desc.includes("pahlawan");
+    const isPlotTwist = desc.includes("plot twist") || desc.includes("twist") || desc.includes("kejutan");
+    const isDeathEvent = desc.includes("mati") || desc.includes("meninggal") || desc.includes("died") || desc.includes("dies");
+
+    let impactLevel: "HIGH" | "MEDIUM" | "LOW" = "MEDIUM";
+    if (isVillainChange || isPlotTwist || isDeathEvent) impactLevel = "HIGH";
+    else if (isProtagonistChange) impactLevel = "HIGH";
+
+    const affectedChapterCount = Math.min(chapters.length, isVillainChange ? 5 : isPlotTwist ? 4 : 3);
+    const impactedChapters = chapters
+      .slice(0, affectedChapterCount)
+      .map((c) => `Bab ${c.orderIndex}: ${c.title}`);
+
+    const impactedCharacterRelationships: string[] = [];
+    if (characters.length > 0) {
+      const c1 = characters[0];
+      const c2 = characters[1];
+      impactedCharacterRelationships.push(`Relasi ${c1.name} ↔ ${c2?.name || "Karakter Utama"}`);
+      if (isVillainChange && characters[2]) {
+        impactedCharacterRelationships.push(`Konflik ${characters[2].name} — Terpengaruh Motivasi`);
+      }
+      if (isDeathEvent) {
+        impactedCharacterRelationships.push(`Semua relasi karakter terdampak — Peristiwa kematian mempengaruhi dinamika tim`);
+      }
+    }
+
+    const impactedPlotPoints = isVillainChange
+      ? ["Titik konflik klimaks utama", "Resolusi akhir arc antagonis", "Motivasi karakter pendukung"]
+      : isPlotTwist
+      ? ["Alur resolusi konflik", "Setup cerita di bab sebelumnya"]
+      : ["Pacing narasi tengah novel"];
+
+    const impactedArcs = isVillainChange
+      ? ["Main Antagonist Arc", "Hero's Journey Arc"]
+      : isDeathEvent
+      ? ["Character Death Arc", "Grief & Resolution Arc"]
+      : ["Supporting Character Arc"];
+
+    const recommendations = [
+      `Tinjau kembali ${affectedChapterCount} bab yang terpengaruh untuk konsistensi narasi.`,
+      `Perbarui profil karakter yang hubungannya berubah akibat perubahan ini.`,
+      impactedArcs.length > 0 ? `Pastikan arc "${impactedArcs[0]}" tetap kohesif setelah perubahan.` : "",
+      isVillainChange ? "Pertimbangkan retroaktif hint di bab-bab awal agar twist terasa organik." : "",
+    ].filter(Boolean);
+
+    return {
+      impactLevel,
+      summary: `Perubahan ini memiliki dampak ${impactLevel === "HIGH" ? "tinggi" : impactLevel === "MEDIUM" ? "sedang" : "rendah"} terhadap narasi. Terdeteksi ${impactedChapters.length} bab, ${impactedCharacterRelationships.length} relasi karakter, dan ${impactedArcs.length} arc cerita yang perlu ditinjau ulang.`,
+      impactedCharacterRelationships,
+      impactedChapters,
+      impactedPlotPoints,
+      impactedArcs,
+      recommendations: recommendations as string[],
+    };
+  }
 }
+
 
 export function getAIProvider(): AIProvider {
   // In production, instantiate OpenAI / Gemini provider based on process.env.AI_PROVIDER

@@ -1,8 +1,8 @@
-# Breemous — AI-Native Collaborative Novel Creation SaaS
+# Wreetfy — AI-Native Collaborative Novel Creation SaaS
 
 > **Operating System for Collaborative Novel Creation**
 
-**Breemous** is a production-ready, AI-native collaborative novel creation SaaS platform built with Next.js 15, TypeScript, Tailwind CSS, Prisma ORM, Framer Motion, and Tiptap.
+**Wreetfy** is a production-ready, AI-native collaborative novel creation SaaS platform built with Next.js 15, TypeScript, Tailwind CSS, Prisma ORM, Framer Motion, and Tiptap.
 
 ---
 
@@ -36,7 +36,7 @@
 ### 2. Installation
 ```bash
 git clone <repository-url>
-cd novel-app
+cd wreetfy
 npm install
 ```
 
@@ -102,4 +102,3 @@ src/
 └── prisma/
     ├── schema.prisma               # Database Schema
     └── seed.ts                     # Pre-populated Demo Seed Data
-```

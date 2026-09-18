@@ -1,15 +1,10 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import { motion } from "framer-motion";
 import {
   Zap,
-  Brain,
   TrendingUp,
-  Award,
   Clock,
-  GitBranch,
-  Layers,
   ChevronRight,
   AlertTriangle,
   HelpCircle,
@@ -35,52 +30,50 @@ export default function ContributionPage({
         }
         setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, [projectId]);
 
   if (loading) {
     return <div className="p-8 text-slate-500 animate-pulse">Menghitung matriks inteligensi kontribusi...</div>;
   }
 
-  const activeScore = memberScores[selectedUserIndex]?.scoreResult || {
-    totalScore: 87,
-    userName: "Sarah Vance",
-    volumeScore: 24,
-    writingScore: 18,
-    ideaScore: 14,
-    narrativeImpactScore: 13,
-    downstreamInfluenceScore: 10,
-    structuralScore: 8,
-    explanations: [
-      "Menulis sekitar 13.150 kata di 3 bab utama manuskrip.",
-      "Memperkenalkan 2 konsep cerita orisinal termasuk Rahasia Kerajaan Elena.",
-      "Satu konsep memengaruhi 7 revisi bab berikutnya secara langsung.",
-      "Mengembangkan arc karakter utama protagonis dan alur sumpah garrison.",
-      "Melakukan revisi struktur utama pada Bab 1 & Bab 3.",
-    ],
-    downstreamImpactAssessment: {
-      level: "Tinggi",
-      summary: "Jika kontribusi Sarah tidak dimasukkan, arc naratif utama membutuhkan kerja ulang struktur secara masif.",
-      affectedElements: ["Motivasi Antagonis Utama", "Klimaks Bab 12-18", "Plot Twist Pertengahan Buku"],
-    },
-  };
+  if (memberScores.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto p-8 text-slate-100">
+        <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">
+          <Zap className="w-4 h-4 text-purple-400" /> AI Contribution Engine
+        </div>
+        <h1 className="text-3xl font-black text-white mb-2">Inteligensi Kontribusi</h1>
+        <div className="p-12 canva-card rounded-3xl text-center text-slate-400 bg-[#0f172a] border border-slate-800">
+          <Sparkles className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+          <p className="font-semibold text-white">Belum ada data kontribusi untuk proyek ini.</p>
+          <p className="text-xs mt-1">Tambahkan kolaborator dan mulai menulis untuk melihat analisis kontribusi AI.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const activeScore = memberScores[selectedUserIndex]?.scoreResult;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 text-slate-100">
       {/* Page Title */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-purple-700 text-xs font-bold uppercase tracking-wider">
-            <Zap className="w-4 h-4 text-purple-600" /> AI Contribution Engine
+          <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
+            <Zap className="w-4 h-4 text-purple-400" /> AI Contribution Engine
           </div>
-          <h1 className="text-3xl font-black text-slate-900 mt-1">Inteligensi Kontribusi</h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <h1 className="text-3xl font-black text-white mt-1">Inteligensi Kontribusi</h1>
+          <p className="text-xs text-slate-400 mt-1">
             Estimasi kontribusi terbaca AI mengevaluasi volume, dampak narasi, asal-usul ide, dan pengaruh turunan.
           </p>
         </div>
 
-        <div className="px-4 py-2 rounded-xl bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-purple-600" />
+        <div className="px-4 py-2 rounded-xl bg-purple-950/60 border border-purple-800/40 text-purple-300 text-xs font-bold flex items-center gap-2">
+          <HelpCircle className="w-4 h-4 text-purple-400" />
           <span>Estimasi AI berdasarkan grafik delta manuskrip</span>
         </div>
       </div>
@@ -89,34 +82,33 @@ export default function ContributionPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {memberScores.map((m, idx) => {
           const isSelected = idx === selectedUserIndex;
-          const score = m.scoreResult?.totalScore || 70;
+          const score = m.scoreResult?.totalScore || 0;
 
           return (
-            <motion.div
+            <div
               key={m.user.id || idx}
-              whileHover={{ y: -4 }}
               onClick={() => setSelectedUserIndex(idx)}
-              className={`cursor-pointer p-6 rounded-3xl transition-all duration-300 ${
+              className={`cursor-pointer p-6 rounded-3xl transition-all duration-300 bg-[#0f172a] ${
                 isSelected
-                  ? "bg-white border-2 border-purple-600 shadow-md"
-                  : "canva-card"
+                  ? "border-2 border-purple-500 shadow-xl shadow-purple-900/40"
+                  : "canva-card border border-slate-800 hover:border-purple-500/50"
               }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <img
-                  src={m.user.avatarUrl || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"}
+                  src={m.user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(m.user.name)}`}
                   alt={m.user.name}
-                  className="w-12 h-12 rounded-2xl border-2 border-purple-200 object-cover"
+                  className="w-12 h-12 rounded-2xl border-2 border-purple-500/40 object-cover"
                 />
                 <div className="text-right">
                   <span className="text-xs font-bold text-slate-400 block uppercase">{m.role}</span>
-                  <span className="text-2xl font-black text-purple-700">{score}</span>
+                  <span className="text-2xl font-black text-purple-400">{score}</span>
                 </div>
               </div>
 
-              <h3 className="font-bold text-slate-900 text-base">{m.user.name}</h3>
-              <p className="text-xs text-slate-500 mt-1">Skor Kontribusi AI</p>
-            </motion.div>
+              <h3 className="font-bold text-white text-base">{m.user.name}</h3>
+              <p className="text-xs text-slate-400 mt-1">Skor Kontribusi AI</p>
+            </div>
           );
         })}
       </div>
@@ -124,130 +116,112 @@ export default function ContributionPage({
       {/* Deep-Dive Explainable Score Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* 6-Factor Score Breakdown */}
-        <div className="lg:col-span-2 canva-card p-8 rounded-3xl space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="lg:col-span-2 canva-card p-8 rounded-3xl space-y-6 bg-[#0f172a] border border-slate-800">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
-              <span className="text-xs font-bold text-purple-700 uppercase tracking-wider">
+              <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">
                 Rincian Skor AI Terjelaskan
               </span>
-              <h2 className="text-2xl font-bold text-slate-900 mt-1">Faktor Utama {activeScore.userName}</h2>
+              <h2 className="text-2xl font-bold text-white mt-1">
+                Faktor Utama {activeScore?.userName}
+              </h2>
             </div>
-            <div className="text-3xl font-black text-purple-700 bg-purple-50 px-4 py-2 rounded-2xl border border-purple-200">
-              {activeScore.totalScore} / 100
+            <div className="text-3xl font-black text-purple-300 bg-purple-950/60 px-4 py-2 rounded-2xl border border-purple-800/40">
+              {activeScore?.totalScore || 0} / 100
             </div>
           </div>
 
           {/* Factor Bars */}
           <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">1. Volume Kontribusi (Kata & Bab)</span>
-                <span className="text-purple-700">{activeScore.volumeScore} / 25</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-purple-600" style={{ width: `${(activeScore.volumeScore / 25) * 100}%` }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">2. Kualitas Penulisan (Kedalaman & Substansi)</span>
-                <span className="text-indigo-700">{activeScore.writingScore} / 20</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-600" style={{ width: `${(activeScore.writingScore / 20) * 100}%` }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">3. Kontribusi Ide (Konsep & Asal-usul)</span>
-                <span className="text-pink-700">{activeScore.ideaScore} / 15</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-pink-600" style={{ width: `${(activeScore.ideaScore / 15) * 100}%` }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">4. Dampak Narasi (Plot Twist & Konflik)</span>
-                <span className="text-amber-700">{activeScore.narrativeImpactScore} / 15</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-500" style={{ width: `${(activeScore.narrativeImpactScore / 15) * 100}%` }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">5. Pengaruh Turunan (Downstream Influence)</span>
-                <span className="text-emerald-700">{activeScore.downstreamInfluenceScore} / 15</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-600" style={{ width: `${(activeScore.downstreamInfluenceScore / 15) * 100}%` }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">6. Kontribusi Struktural (Pacing & Reorganisasi)</span>
-                <span className="text-cyan-700">{activeScore.structuralScore} / 10</span>
-              </div>
-              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-cyan-600" style={{ width: `${(activeScore.structuralScore / 10) * 100}%` }} />
-              </div>
-            </div>
+            <FactorBar label="1. Volume Kontribusi (Kata & Bab)" value={activeScore?.volumeScore || 0} max={25} color="bg-purple-500" textColor="text-purple-400" />
+            <FactorBar label="2. Kualitas Penulisan (Kedalaman & Substansi)" value={activeScore?.writingScore || 0} max={20} color="bg-indigo-500" textColor="text-indigo-400" />
+            <FactorBar label="3. Kontribusi Ide (Konsep & Asal-usul)" value={activeScore?.ideaScore || 0} max={15} color="bg-pink-500" textColor="text-pink-400" />
+            <FactorBar label="4. Dampak Narasi (Plot Twist & Konflik)" value={activeScore?.narrativeImpactScore || 0} max={15} color="bg-amber-500" textColor="text-amber-400" />
+            <FactorBar label="5. Pengaruh Turunan (Downstream Influence)" value={activeScore?.downstreamInfluenceScore || 0} max={15} color="bg-emerald-500" textColor="text-emerald-400" />
+            <FactorBar label="6. Kontribusi Struktural (Pacing & Reorganisasi)" value={activeScore?.structuralScore || 0} max={10} color="bg-cyan-500" textColor="text-cyan-400" />
           </div>
 
           {/* Why this score explanations box */}
-          <div className="p-5 rounded-2xl bg-purple-50 border border-purple-200 space-y-3">
-            <h4 className="font-bold text-purple-900 text-sm flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-600" /> Mengapa skor ini diberikan?
-            </h4>
-            <ul className="space-y-2">
-              {activeScore.explanations.map((exp: string, idx: number) => (
-                <li key={idx} className="text-xs text-slate-700 flex items-start gap-2">
-                  <span className="text-purple-600 mt-0.5">•</span>
-                  <span>{exp}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {activeScore?.explanations && activeScore.explanations.length > 0 && (
+            <div className="p-5 rounded-2xl bg-purple-950/40 border border-purple-800/40 space-y-3">
+              <h4 className="font-bold text-purple-300 text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-400" /> Mengapa skor ini diberikan?
+              </h4>
+              <ul className="space-y-2">
+                {activeScore.explanations.map((exp: string, idx: number) => (
+                  <li key={idx} className="text-xs text-slate-300 flex items-start gap-2">
+                    <span className="text-purple-400 mt-0.5">•</span>
+                    <span>{exp}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Counterfactual Impact Analysis */}
         <div className="space-y-6">
-          <div className="canva-card p-6 rounded-3xl space-y-4">
-            <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider">
+          <div className="canva-card p-6 rounded-3xl space-y-4 bg-[#0f172a] border border-slate-800">
+            <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
               <AlertTriangle className="w-4 h-4" /> Analisis Dampak Kontrafaktual
             </div>
-            <h3 className="font-bold text-slate-900 text-lg">Apa yang terjadi jika kontribusi ini tidak ada?</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {activeScore.downstreamImpactAssessment?.summary}
+            <h3 className="font-bold text-white text-lg">Apa yang terjadi jika kontribusi ini tidak ada?</h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {activeScore?.downstreamImpactAssessment?.summary || "Belum ada analisis kontrafaktual yang cukup."}
             </p>
 
-            <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs space-y-1">
-              <div className="font-bold text-amber-800 uppercase tracking-wider text-[10px]">
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-800/40 text-xs space-y-1">
+              <div className="font-bold text-amber-300 uppercase tracking-wider text-[10px]">
                 Estimasi Pengaruh Turunan
               </div>
-              <div className="text-xl font-black text-amber-900">
-                {activeScore.downstreamImpactAssessment?.level || "Tinggi"}
+              <div className="text-xl font-black text-amber-400">
+                {activeScore?.downstreamImpactAssessment?.level || "N/A"}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-slate-700">Elemen Cerita Yang Terpengaruh:</div>
-              <div className="space-y-1">
-                {activeScore.downstreamImpactAssessment?.affectedElements?.map((el: string, idx: number) => (
-                  <div key={idx} className="text-xs font-medium text-purple-800 bg-purple-50 p-2 rounded-lg border border-purple-200">
-                    • {el}
-                  </div>
-                ))}
+            {activeScore?.downstreamImpactAssessment?.affectedElements?.length > 0 && (
+              <div className="space-y-2">
+                <div className="text-xs font-bold text-slate-300">Elemen Cerita Yang Terpengaruh:</div>
+                <div className="space-y-1">
+                  {activeScore.downstreamImpactAssessment.affectedElements.map((el: string, idx: number) => (
+                    <div key={idx} className="text-xs font-medium text-purple-300 bg-purple-950/60 p-2 rounded-lg border border-purple-800/40">
+                      • {el}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function FactorBar({
+  label,
+  value,
+  max,
+  color,
+  textColor,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  color: string;
+  textColor: string;
+}) {
+  const pct = Math.min(100, (value / max) * 100);
+  return (
+    <div>
+      <div className="flex justify-between text-xs font-bold mb-1">
+        <span className="text-slate-300">{label}</span>
+        <span className={textColor}>
+          {value} / {max}
+        </span>
+      </div>
+      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+        <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

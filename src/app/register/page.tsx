@@ -49,11 +49,11 @@ export default function RegisterPage() {
         className="w-full max-w-md glass-panel p-8 rounded-3xl border border-slate-800 shadow-2xl"
       >
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mx-auto mb-3 shadow-lg shadow-indigo-500/20">
-            <BookOpen className="w-6 h-6" />
+          <div className="h-16 mx-auto mb-3 flex items-center justify-center">
+            <img src="/logo-wreetfy.png" alt="Wreetfy Logo" className="h-14 w-auto object-contain drop-shadow-[0_0_12px_rgba(14,165,233,0.5)]" />
           </div>
           <h1 className="text-2xl font-bold text-white">Create Account</h1>
-          <p className="text-sm text-slate-400 mt-1">Start creating collaborative works on Breemous</p>
+          <p className="text-sm text-slate-400 mt-1">Start creating collaborative works on Wreetfy</p>
         </div>
 
         {error && (

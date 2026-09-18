@@ -2,8 +2,9 @@ import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-export const AUTH_COOKIE_NAME = "breemous_session";
+export const AUTH_COOKIE_NAME = "wreetfy_session";
 const LEGACY_AUTH_COOKIE_NAME = "auth_token";
+const LEGACY_AUTH_COOKIE_NAME_OLD = "breemous_session";
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "novel-app-super-secret-key-change-in-production-2026"
@@ -62,4 +63,5 @@ export async function clearAuthCookie() {
   const cookieStore = await cookies();
   cookieStore.delete(AUTH_COOKIE_NAME);
   cookieStore.delete(LEGACY_AUTH_COOKIE_NAME);
+  cookieStore.delete(LEGACY_AUTH_COOKIE_NAME_OLD);
 }

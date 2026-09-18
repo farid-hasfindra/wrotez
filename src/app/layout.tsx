@@ -13,17 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Breemous | AI-Native Collaborative Creation",
-  description: "Workspace kolaboratif berbasis AI untuk menulis novel dan mengelola kontribusi kreatif.",
+  title: "Wreetfy | AI-Native Collaborative Creation",
+  description: "Workspace kolaboratif berbasis AI untuk kreasi multi-bidang dan manajemen kontribusi transparan.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="id"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#090d16] text-slate-100">{children}</body>
     </html>
   );
 }
